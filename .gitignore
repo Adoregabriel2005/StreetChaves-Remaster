@@ -5,6 +5,10 @@ __pycache__/
 street_chaves_config.json
 *.bak
 Thumbs.db
+dist/
+build/
+*.spec
+build_deb.py
 street_chaves_remaster_backup.py
 street_chaves_remaster_v3.py
 street_chaves_remaster_v4.py
