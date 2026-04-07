@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+street_chaves_config.json
+*.bak
+Thumbs.db
+street_chaves_remaster_backup.py
+street_chaves_remaster_v3.py
+street_chaves_remaster_v4.py
+street_chaves_remaster_v5.py
