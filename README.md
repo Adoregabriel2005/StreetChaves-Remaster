@@ -56,12 +56,19 @@ Este remaster reconstrói o jogo inteiro em Python com Pygame, mantendo todos os
 - **Python 3.8** ou superior
 - **Pygame 2.1** ou superior
 - **NumPy 1.21** ou superior
+- **Sistema Operacional:** Windows XP SP3 ou superior, Linux, macOS
 
-### Hardware Mínimo
-- Qualquer processador dos últimos 15 anos
-- 256 MB de RAM livre
-- Placa de vídeo com suporte a SDL2 (qualquer uma)
-- ~50 MB de espaço em disco
+### Hardware Mínimo (Testado/Estimado)
+
+| Componente | Mínimo | Recomendado |
+|-----------|--------|-------------|
+| **Processador** | Intel Celeron 1007U (1.5 GHz) / AMD Duron (1.0~1.8 GHz) / Intel Atom N270 (1.6 GHz) | Intel Core 2 Duo (2.0 GHz+) / AMD Athlon 64 (2.0 GHz+) |
+| **RAM** | 512 MB DDR2 | 1 GB DDR2 ou superior |
+| **Vídeo** | NVIDIA GeForce 9400 GT (512 MB VRAM) / ATI Radeon HD 2000~3000 series | Qualquer GPU com suporte a SDL2 |
+| **Armazenamento** | ~50 MB em HD com boa leitura ou DVD 4.7 GB | SSD ou HD 7200 RPM |
+| **SO** | Windows XP SP3 / Linux / macOS | Windows 7+ / Ubuntu 18.04+ / macOS 10.14+ |
+
+> 💡 **Nota:** O jogo é leve (sprites 2D em BMP, áudio WAV). Qualquer PC do início dos anos 2000 pra frente com Python instalado consegue rodar.
 
 ### Controles Suportados
 - Teclado (P1: WASD + HJKLO | P2: Setas + Numpad)
@@ -70,6 +77,20 @@ Este remaster reconstrói o jogo inteiro em Python com Pygame, mantendo todos os
 - Controles genéricos USB (tipo PS2 USB)
 - 8BitDo, Sega Saturn USB e similares
 - Qualquer controle reconhecido pelo SDL2
+
+## ⚠️ Problemas Conhecidos / O Que Ainda Não Funciona
+
+Estas são funções que **ainda não foram implementadas ou possuem bugs conhecidos**. Mexer nelas pode causar erros:
+
+- **Configuração de teclas do teclado** — As teclas do teclado (P1 e P2) são fixas no código. Ainda não há tela para remapear teclas do teclado, apenas dos controles/joysticks.
+- **Netplay / Online** — Não existe modo online. Apenas local (mesmo PC).
+- **Redimensionar janela arrastando** — A janela é de tamanho fixo (800x600). Só muda via opções (Janela/Tela Cheia).
+- **Resolução acima de 1024x768** — O jogo usa sprites de baixa resolução (400x300 escalados 2x). Resoluções maiores não estão implementadas.
+- **Salvar progresso do Arcade** — Não há sistema de save. Se fechar o jogo, perde o progresso do modo Arcade.
+- **Galeria de desbloqueáveis** — Não existe sistema de desbloqueio ou galeria.
+- **Replays** — Não há gravação ou reprodução de replays.
+- **Editar/adicionar lutadores** — O sistema de lutadores é fixo nos 15 originais. Não há suporte a mods.
+- **Áudio em formato comprimido** — O jogo usa WAV puro. MP3/OGG não são suportados para os assets.
 
 ## 🚀 Como Jogar
 
