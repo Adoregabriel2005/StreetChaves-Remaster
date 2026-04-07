@@ -758,7 +758,12 @@ class Game:
         self.fullscreen = False
         self.fs_resolution_idx = 0  # Index into FULLSCREEN_RESOLUTIONS
 
-        self.base_path = os.path.dirname(os.path.abspath(__file__))
+        # Determine base path for assets — works with PyInstaller, .app bundles, and normal Python
+        if getattr(sys, 'frozen', False):
+            # PyInstaller: assets are next to the executable
+            self.base_path = os.path.dirname(sys.executable)
+        else:
+            self.base_path = os.path.dirname(os.path.abspath(__file__))
 
         # Joystick / gamepad system — supports any number of controllers
         self.joysticks = []        # list of pygame.joystick.Joystick objects
