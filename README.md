@@ -9,7 +9,7 @@
 
 **Remaster em Python/Pygame** do jogo clássico **Street Chaves v1.5A**, originalmente criado pela **Cybergamba em 2003** em Delphi/DirectDraw.
 
-> ⚠️ **Este projeto NÃO pretende substituir o jogo original.** O objetivo é apenas melhorar, preservar e deixar jogável em computadores modernos um clássico da cultura brasileira de jogos independentes.
+> ⚠️ **Este projeto NÃO pretende substituir o jogo original.** O objetivo é apenas melhorar, preservar e deixar jogável em computadores modernos um clássico da cultura brasileira de jogos independentes dos anos 2000.
 
 ---
 
