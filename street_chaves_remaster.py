@@ -3,6 +3,7 @@ Street Chaves Remaster v7 - Pygame
 Remaster do jogo Street Chaves v1.5A da Cybergamba (2003)
 Compativel com qualquer controle USB/Bluetooth - configuravel no menu
 """
+# Importações necessárias para o jogo: Pygame para gráficos e som, sys para saída, os para arquivos, etc.
 import pygame
 import sys
 import os
@@ -12,12 +13,12 @@ import json
 import numpy as np
 
 # ============================================================
-# DEFAULT JOYSTICK / GAMEPAD MAPPINGS
+# CONFIGURAÇÕES PADRÃO DE JOYSTICK / GAMEPAD
 # ============================================================
-# Action names that can be mapped
+# Nomes das ações que podem ser mapeadas nos controles
 JOY_ACTIONS = ["light_punch", "light_kick", "heavy_punch", "heavy_kick", "special"]
 
-# Sensible default: first 5 buttons map to the 5 attack actions
+# Mapeamento padrão sensato: os primeiros 5 botões mapeiam para as 5 ações de ataque
 DEFAULT_JOY_MAP_P1 = {
     "light_punch": 0,
     "light_kick": 1,
@@ -32,69 +33,89 @@ DEFAULT_JOY_MAP_P2 = {
     "heavy_kick": 3,
     "special": 4,
 }
+# Zona morta para eixos do joystick, para ignorar movimentos pequenos
 JOY_AXIS_DEADZONE = 0.35
 
+# Arquivo de configuração para salvar/carregar settings
 CONFIG_FILE = "street_chaves_config.json"
 
 # ============================================================
-# CONFIGURAÇÕES
+# CONFIGURAÇÕES GERAIS DO JOGO
 # ============================================================
+# Dimensões originais da tela (escala 1x)
 ORIGINAL_W, ORIGINAL_H = 400, 300
+# Fator de escala para aumentar a resolução
 SCALE = 2
+# Largura e altura da tela escalada
 SCREEN_W = ORIGINAL_W * SCALE
 SCREEN_H = ORIGINAL_H * SCALE
+# Frames por segundo
 FPS = 60
+# Largura de rolagem do fundo
 BG_SCROLL_W = 600
 
-# 4:3 resolution options for fullscreen
+# Opções de resolução para tela cheia (proporção 4:3)
 FULLSCREEN_RESOLUTIONS = [
     (800, 600),
     (1024, 768),
 ]
 
+# Gravidade aplicada aos personagens
 GRAVITY = 0.6
-GROUND_Y = 230  # default, overridden per stage
+# Posição Y padrão do chão (substituída por estágio)
+GROUND_Y = 230
+# Velocidade de caminhada
 WALK_SPEED = 2.5
 
-# Per-stage ground Y in game coords (computed from bg floor detection)
+# Posição Y do chão por estágio (calculada da detecção do piso do fundo)
 STAGE_GROUND_Y = {
     0: 214, 1: 232, 2: 210, 3: 243, 4: 231, 5: 208,
     6: 208, 7: 235, 8: 243, 9: 235, 10: 240, 11: 237,
 }
+# Força do pulo (negativa para cima)
 JUMP_FORCE = -11
+# Empurrão para trás após ataque
 PUSH_BACK = 4
 
+# Nomes dos lutadores
 FIGHTER_NAMES = [
     "CHAVES", "SEU MADRUGA", "CHIQUINHA", "QUICO", "DONA FLORINDA",
     "PROF. GIRAFALES", "SR. BARRIGA", "BRUXA DO 71", "PATY",
     "NHONHO", "GODINES", "SR. FURTADO", "JAIMINHO", "DONA NEVES", "GLORIA"
 ]
 
+# Índices de sons para hits leves
 SND_HIT_LIGHT = [6, 8, 11, 33, 46, 48, 50, 56]
+# Índices de sons para hits pesados
 SND_HIT_HEAVY = [7, 9, 13, 25, 30, 31, 34, 52]
+# Índices de sons para bloqueio
 SND_BLOCK = [49, 53]
+# Índices de sons para KO
 SND_KO = [1, 2, 3, 4, 5]
+# Índices de sons para especiais
 SND_SPECIAL = [12, 14, 15, 16, 17, 18]
 
+# Animações padrão para lutadores (frame inicial, final, velocidade)
 DEFAULT_ANIMS = {
-    "idle":         (0, 1, 8),
-    "walk_fwd":     (2, 5, 6),
-    "walk_back":    (2, 5, 6),
-    "jump_up":      (6, 6, 1),
-    "crouch":       (7, 7, 1),
-    "light_punch":  (8, 10, 3),
-    "heavy_punch":  (11, 14, 4),
-    "light_kick":   (15, 17, 3),
-    "heavy_kick":   (18, 21, 4),
-    "special":      (22, 28, 3),
-    "hit":          (29, 30, 5),
-    "knockdown":    (31, 35, 4),
-    "getup":        (36, 37, 6),
-    "win":          (38, 41, 10),
-    "block":        (7, 7, 1),
-    "throw":        (42, 45, 4),
+    "idle":         (0, 1, 8),  # Parado
+    "walk_fwd":     (2, 5, 6),  # Caminhar para frente
+    "walk_back":    (2, 5, 6),  # Caminhar para trás
+    "jump_up":      (6, 6, 1),  # Pulando para cima
+    "crouch":       (7, 7, 1),  # Agachado
+    "light_punch":  (8, 10, 3), # Soco leve
+    "heavy_punch":  (11, 14, 4),# Soco pesado
+    "light_kick":   (15, 17, 3),# Chute leve
+    "heavy_kick":   (18, 21, 4),# Chute pesado
+    "special":      (22, 28, 3),# Especial
+    "hit":          (29, 30, 5), # Atingido
+    "knockdown":    (31, 35, 4),# Nocauteado
+    "getup":        (36, 37, 6), # Levantando
+    "win":          (38, 41, 10),# Vitória
+    "block":        (7, 7, 1),  # Bloqueando
+    "throw":        (42, 45, 4), # Arremesso
 }
 
+# Mapeamento de teclas para jogador 1
 KEY_BINDINGS = {
     "up":           pygame.K_w,
     "down":         pygame.K_s,
@@ -127,7 +148,7 @@ P2_KEY_BINDINGS = {
     "special":      pygame.K_KP6,
 }
 
-# Difficulty settings for arcade mode (14 opponents)
+# Configurações de dificuldade para o modo arcade (14 oponentes)
 TOWER_DIFFICULTY = [
     {"attack_rate": 0.4, "dmg_mult": 0.7, "name": "MUITO FACIL"},
     {"attack_rate": 0.5, "dmg_mult": 0.75, "name": "FACIL"},
@@ -151,15 +172,16 @@ TOWER_DIFFICULTY = [
 # ============================================================
 
 def load_sprite_strip(filepath):
-    """Load a horizontal sprite strip, returning (frames, anchors).
-    anchors[i] = x-offset from left edge of frame to body center (hip region)."""
+    """Carrega uma tira horizontal de sprites, retornando (frames, anchors).
+    anchors[i] = deslocamento x da borda esquerda do frame para o centro do corpo (região do quadril)."""
+    # Carrega a imagem e converte para formato compatível
     img = pygame.image.load(filepath).convert()
     w, h = img.get_size()
     pixels = pygame.surfarray.array3d(img)
-    # Detect separator columns: columns where >= 95% of pixels are dark (brightness <= 50).
-    # Some BMPs have near-black separators with 1-3 slightly bright pixels from compression.
-    pixel_brightness = pixels.max(axis=2)  # max channel per pixel, shape (w, h)
-    dark_pct = (pixel_brightness <= 50).mean(axis=1)  # fraction of dark pixels per column
+    # Detecta colunas separadoras: colunas onde >= 95% dos pixels são escuros (brilho <= 50).
+    # Alguns BMPs têm separadores quase pretos com 1-3 pixels ligeiramente brilhantes da compressão.
+    pixel_brightness = pixels.max(axis=2)  # brilho máximo por pixel, forma (w, h)
+    dark_pct = (pixel_brightness <= 50).mean(axis=1)  # fração de pixels escuros por coluna
     col_all_black = dark_pct >= 0.95
     separators = [x for x in range(w) if col_all_black[x]]
     frames = []
@@ -169,6 +191,7 @@ def load_sprite_strip(filepath):
     for sep in boundaries:
         fw = sep - prev
         if fw > 2:
+            # Cria superfície para o frame
             frame_surf = pygame.Surface((fw, h), pygame.SRCALPHA)
             temp = pygame.Surface((fw, h))
             temp.blit(img, (0, 0), (prev, 0, fw, h))
@@ -185,9 +208,9 @@ def load_sprite_strip(filepath):
             del alpha_arr
             frames.append(frame_surf)
 
-            # Compute anchor: weighted center-of-mass of bottom third of body (numpy)
-            visible = ~white_mask  # shape (fw, h), True where sprite pixel exists
-            col_has_pixel = visible.any(axis=0)  # per-row: is there any visible pixel?
+            # Computa âncora: centro de massa ponderado do terço inferior do corpo (usando numpy)
+            visible = ~white_mask  # forma (fw, h), True onde pixel do sprite existe
+            col_has_pixel = visible.any(axis=0)  # por linha: há algum pixel visível?
             vis_rows = np.where(col_has_pixel)[0]
             if len(vis_rows) > 0:
                 bt = vis_rows[0]
@@ -195,7 +218,7 @@ def load_sprite_strip(filepath):
                 body_h = bb - bt
                 hip_start = bb - max(15, body_h // 3)
                 hip_region = visible[:, hip_start:bb + 1]  # (fw, hip_h)
-                col_weights = hip_region.sum(axis=1).astype(float)  # per-x: count of visible pixels in hip
+                col_weights = hip_region.sum(axis=1).astype(float)  # por-x: contagem de pixels visíveis no quadril
                 total_weight = col_weights.sum()
                 if total_weight > 0:
                     xs = np.arange(fw, dtype=float)
@@ -209,15 +232,18 @@ def load_sprite_strip(filepath):
 
 
 def scale_surface(surface, factor):
+    """Escala uma superfície por um fator."""
     w, h = surface.get_size()
     return pygame.transform.scale(surface, (int(w * factor), int(h * factor)))
 
 
 def flip_frames(frames):
+    """Inverte horizontalmente uma lista de frames."""
     return [pygame.transform.flip(f, True, False) for f in frames]
 
 
 def make_transparent(img):
+    """Torna pixels brancos transparentes em uma imagem."""
     result = img.convert_alpha()
     arr = pygame.surfarray.pixels3d(result)
     alpha = pygame.surfarray.pixels_alpha(result)
@@ -313,10 +339,12 @@ class DamageNumber:
 
 
 # ============================================================
-# FIGHTER CLASS
+# CLASSE FIGHTER (LUTADOR)
 # ============================================================
+# Representa um lutador no jogo, com animações, física, entrada e combate.
 class Fighter:
     def __init__(self, fighter_id, x, y, facing_right=True, is_player=True):
+        # Inicializa o lutador com ID, posição e orientação
         self.id = fighter_id
         self.name = FIGHTER_NAMES[fighter_id - 1]
         self.x = float(x)
@@ -324,28 +352,33 @@ class Fighter:
         self.facing_right = facing_right
         self.is_player = is_player
 
+        # Frames e âncoras para animações direita/esquerda
         self.frames_right = []
         self.frames_left = []
-        self.anchors_right = []  # Per-frame anchor X (body center)
+        self.anchors_right = []  # Âncora X por frame (centro do corpo)
         self.anchors_left = []
-        self.ground_y = GROUND_Y  # Set by game per stage
+        self.ground_y = GROUND_Y  # Definido pelo jogo por estágio
 
+        # Animações e estado atual
         self.anims = dict(DEFAULT_ANIMS)
         self.current_anim = "idle"
         self.anim_frame = 0
         self.anim_timer = 0
         self.anim_playing = False
 
+        # Física: velocidade, gravidade, etc.
         self.vx = 0.0
         self.vy = 0.0
         self.on_ground = True
         self.crouching = False
 
+        # Vida e especial
         self.hp = 100
         self.max_hp = 100
         self.hp_display = 100.0
         self.special_meter = 0.0
         self.max_special = 100.0
+        # Estado de combate
         self.attacking = False
         self.attack_type = ""
         self.hit_stun = 0
@@ -358,15 +391,17 @@ class Fighter:
         self.combo_damage = 0
         self.combo_timer = 0
         self.alive = True
-        self.flash_timer = 0  # White flash on hit
-        self.air_attack_done = False  # One air attack per jump
+        self.flash_timer = 0  # Piscar branco ao ser atingido
+        self.air_attack_done = False  # Um ataque aéreo por pulo
+        self.infinite_health = False  # Cheat: vida infinita
 
+        # Hitbox de ataque
         self.attack_hitbox = None
         self.attack_damage = 0
         self.has_hit = False
         self.portraits = []
 
-        # Input state
+        # Estado de entrada (teclas pressionadas)
         self.inputs = {
             "left": False, "right": False, "up": False, "down": False,
             "light_punch": False, "heavy_punch": False,
@@ -607,6 +642,8 @@ class Fighter:
         self.hp_display += diff * 0.1
 
     def take_hit(self, damage, attacker):
+        if self.infinite_health:
+            return False
         if self.invincible > 0:
             return False
         # Can't be hit while knocked down
@@ -784,6 +821,9 @@ class Game:
         self.vol_sfx = 0.5
         self.vol_music = 0.3
         self.vol_voice = 0.6
+
+        # Cheats
+        self.cheats_enabled = False
 
         self.state = "intro"
         self.backgrounds = []
@@ -1202,6 +1242,8 @@ class Game:
                 self.vol_voice = float(data["vol_voice"])
             if "fs_resolution_idx" in data:
                 self.fs_resolution_idx = int(data["fs_resolution_idx"])
+            if "cheats_enabled" in data:
+                self.cheats_enabled = bool(data["cheats_enabled"])
             self.apply_volumes()
         except Exception:
             pass
@@ -1214,6 +1256,7 @@ class Game:
         if fighter_id in self.portraits:
             f.portraits = self.portraits[fighter_id]
         f.ground_y = self.current_ground_y
+        f.infinite_health = self.cheats_enabled
         return f
 
     # ==========================================
