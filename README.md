@@ -65,14 +65,14 @@ Este remaster reconstrói o jogo inteiro em Python com Pygame, mantendo todos os
 | **Processador** | Intel Celeron 1007U (1.5 GHz) / AMD Duron (1.0~1.8 GHz) / Intel Atom N270 (1.6 GHz) | Intel Core 2 Duo (2.0 GHz+) / AMD Athlon 64 (2.0 GHz+) |
 | **RAM** | 512 MB DDR2 | 1 GB DDR2 ou superior |
 | **Vídeo** | NVIDIA GeForce 9400 GT (512 MB VRAM) / ATI Radeon HD 2000~3000 series | Qualquer GPU com suporte a SDL2 |
-| **Armazenamento** | ~50 MB em HD com boa leitura ou DVD 4.7 GB | SSD ou HD 7200 RPM |
-| **SO** | Windows XP SP3 / Linux / macOS | Windows 7+ / Ubuntu 18.04+ / macOS 10.14+ |
+| **Armazenamento** | ~50 MB em disco | 90 MB em disco |
+| **SO** | Windows XP SP3 / Linux / macOS | Windows 7 SP1 ou acima / Ubuntu 18.04+ / macOS 10.13+ |
 
-> 💡 **Nota:** O jogo é leve (sprites 2D em BMP, áudio WAV). Qualquer PC do início dos anos 2000 pra frente com Python instalado consegue rodar.
+> 💡 **Nota:** O jogo por possuir gráfico simples, é possivel rodar em computadores antigos com suporte a python 3.8 para cima(de acordo com os requisitos acima).
 
 ### Controles Suportados
 - Teclado (P1: WASD + HJKLO | P2: Setas + Numpad)
-- Xbox 360, Xbox One, Xbox Series X|S
+- Controles com suporte para Xinput
 - PlayStation 4, PlayStation 5
 - Controles genéricos USB (tipo PS2 USB)
 - 8BitDo, Sega Saturn USB e similares
